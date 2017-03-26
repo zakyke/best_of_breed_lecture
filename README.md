@@ -1,5 +1,5 @@
-# best of breed lecture
-js sample code for best of breed architecture lecture 
+# Best of breed lecture
+JS sample code for best of breed architecture lecture 
 
 To run best of breed architecture lecture slids 
 
