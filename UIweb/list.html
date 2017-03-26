@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block title %}Posts{% endblock %}
+{% block content %}
+<p>You have <strong>{{ posts.length }}</strong> posts!</p>
+<p><a href="/post/ui/new">Create a Post</a></p>
+<ul id="posts">
+  {% for post in posts %}
+  <li>
+    <h2>{{ post.title }}</h2>
+    <p><a href="/post/{{ post.id }}">Read post</a></p>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

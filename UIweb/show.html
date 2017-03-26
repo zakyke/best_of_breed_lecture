@@ -1,0 +1,9 @@
+ {% extends 'layout.html' %} {% block content %} {% if (post) %}
+<h1>{{ post.title }}</h1>
+<h2>{{ post.id }}</h2>
+<p>{{ post.article }}</p>
+{% else %}
+<h1>Nothing to show</h1>
+{% endif %}
+<p><a href="/post/ui/new">Add new post</a></p>
+<p><a href="/">List posts</a></p>{% endblock %}

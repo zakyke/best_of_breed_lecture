@@ -1,0 +1,240 @@
+BOB - Best Of Breed Architecture 
+IronSRC Infrastructure
+21 Mar 2017
+
+Katalan-Ezra Zaky
+zaky.katalan-ezra@ironsrc.com
+
+* What are the characteristics of good software?
+
+* 
+
+*Its* *working* *the* *way* *it* *should*
+
+*Its* *being* *used*
+
+*Easy* *to* *changed*
+
+- Easy to add code.
+- Easy to remove code.
+- Easy to debug.
+
+Easy  == fast. 
+Fast == more time to do interesting things
+
+High evolutionary code allow us to experiment new thing end evolve.
+
+
+* How to achieve good design (1) - General concepts
+*Interfaces*
+"Program to an 'interface', not an 'implementation'."
+Favor 'object composition' over 'class inheritance'." 
+(Design Patterns: Elements of Reusable Object-Oriented Software 1994)
+
+*Delay* *decisions* and *mock* implementation of component 
+related to resources and not to the core business.
+
+*Know* *your* *boundaries*. When you need to cross boundary do it with interfaces and injection
+
+*Principle* *of* *least* *knowledge* 
+Every part of your code should know the minimum about other component.
+It better know the behavior of other part and not its internals. 
+.link https://en.wikipedia.org/wiki/Law_of_Demeter Law of Demeter (LoD)
+
+* 
+
+*Open/Close* 
+If adding features or changing resources successfully made without changing code
+and only by adding code its a good indication that the design is good.
+ 
+*Data*Driven*Decision*
+When you don't have data to make a design decisions, make the minimum possible implementation in order to collect data, only then continue with the design.
+
+
+*Agile*
+Small iterations
+
+*Review*the*design*with*your*co-workers*
+
+*Never*stop*learning*
+
+
+* How to achieve good design (2) - Best of all breed
+
+*DDD-*Domain*driven*design*
+"placing the project's primary focus on the core domain and domain logic"
+In real world every component is a domain, Using AWS, Google API, dealing with Database,
+Handling HTTP communication.
+In order to focus on each domain problem we need to separate each domain to a different projects, *(micro* *projects)*,
+of services and libraries in order to focus on each project core.
+Later we see how we stitch all this projects to one application. 
+
+*Onion*architecture,*Clean*architecture*
+Both architectures emphasize on knowing components only in one direction.
+A -> B -> C, C can not know about A nor B.
+If you can add new functionality to the beginning of the chain that be better.
+
+
+*Tests*
+Test your code with mock resources
+
+* How to achieve good design (3) - Micro concepts
+
+*Two*kinds*of*functions*
+1. Logic functions should be pure. Get all input from outside and return always the same result.
+2. Feature functions holds the feature flow, initiate resources and invoke logic functions.
+
+
+*Fast*return*
+
+    if (!valid){
+        return
+    }
+    do some other stuff
+    return
+
+*Profile*and*Benchmark:*
+_It_is_often_a_mistake_to_make_a_priori_judgments_about_what_parts_of_a_program_are_really_critical,_since_the_universal_experience_of_programmers_who_have_been_using_measurement_tools_has_been_that_their_intuitive_guesses_fail._(Donald_Knuth)_
+
+
+
+
+
+* Make it work, make it right, make it fast
+
+ 
+* Working example  - Blog
+
+* Requirements (1/2)
+
+- Create, Edit, View, Delete and *List* Posts
+- Search
+- Additional recommended reading
+- Home page, New articles , tags cloud, Top writers
+- Rating
+- Text correction
+- Ads
+- Rev share
+- Comments
+- Notifications, On new or changed articles and Comments
+
+
+* Requirements (2/2)
+- Versioning
+- Publish in condition. Date for example.
+- Registration
+- Pricing. Free 10 blogs a month, can not comment, 1$ can comment and unlimited reading.
+- Adjust to enterprise
+- Manager review
+- Access control, Only managers approve.
+- Auto Tweet and other social media interaction.
+
+* Vocabulary
+
+Core: The code that only you write.
+
+Libraries: Code created or imported and can be used by other application.
+Usually its better to find libraries in the web then develop.
+If you need to develop a library it can be open sourced
+
+Service: a library that run in the background.
+As libraries its better to find services in the web then develop one...
+
+Entry point: 
+Responsible for the order of initializing services, create library instances,create core entities and initialize an application
+
+Application: Initialize features
+
+* 
+
+Feature coordinator: also known as controller, flow function, orchestra-tor
+Manage the flow of different function that assemble the feature.
+A good feature component looks like a requirement document.
+Features test is actually an acceptance tests.
+
+Feature example:
+1 flow - if not login then login,browse items,select item, check inventory, if exists add to cart, pay, ship.
+2 flow - browse items,select item,add to cart,ask to pay,if not login then login, pay, check inventory if item exists ship it else order it
+
+Each step function didn't changed the core functionality only the order its been executed.
+
+* Boundaries
+* Entry point (1/3)
+initialize resources
+IO Device - every things that come from persistence.
+Utilities.
+Analytics.
+Application.
+
+* Application (2/3)
+initialize features
+fl = FeatureList(IODevice,Analitics)
+fap = FeatureAddPost(IODevice,Analitics,Utilities)
+fup = FeatureUpdatePost(IODevice,Analitics,Utilities)
+fgp = FeatureGetPost(IODevice,Analitics)
+
+* Application (3/3)
+initiate route by binding incoming messages to a route feature function
+Initialize display
+Validate incoming message.
+Gather transport data like login user details
+Invoke features
+return the feature result to a display device
+
+* Feature
+Manage the feature flow only with the data and resources it got from the entry point.
+
+* Core component
+Manage task logic. 
+Validate post, Save Post to persistence, Search for post by several arguments, etc...
+
+Each libraries or service the feature use is a core component (A domain).
+Some of the libraries are open source projects like analytics and augment.
+And some written specifically for the solution, storage and Posts for example.
+They both injected into the feature and looks the same to it.
+
+
+* Code
+
+* Anti patterns
+Use a design as dogma. think about what you are doing and take an educated decision.
+
+Sticking to a design when you find a better way to do things.
+
+A new requirement will come that force you to break the API, and violate the open/close principle.
+Its okay but make an optioned decision about it.  
+
+Don't over engineer, its okay to write dirty code, specially if it within a boundary
+
+Don't design a prof of concept.
+
+Don't use the prof of concept code in production.
+
+Don't use sample code from the web in production.
+
+DRY is over rated 
+
+Limit your research at some point its better writng poor code then not writing at all.
+
+Thinking that a problem is simple.
+
+* Runnable presentation
+
+I couldn't help myself
+
+.play main.go /^func main/,/^}/
+
+* Conclusion
+Creating a clear bounders let you focus on a single problem and solve it without messing up othe component.
+
+Testing in small and in focus.
+
+Easy to refactor.
+
+Easy to break the part that need to be remote services.
+
+
+* further reading
+.link https://12factor.net/ The twelve-factor methodology
+
+.link https://www.google.co.il/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjNoIHa4erSAhWHuxQKHXTSAeQQtwIIGDAA&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D8bZh5LMaSmE&usg=AFQjCNHRLzxAcwHKS361f-0iHNbbi89SSA&bvm=bv.150120842,d.d24 All the Little Things by Sandi Metz
