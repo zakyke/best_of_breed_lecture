@@ -12,7 +12,7 @@
   "dependencies": {
     "co": "^4.1.0",
     "co-body": "^1.0.0",
-    "co-busboy": "^1.0.2",
+    "co-busboy": "^2.0.0",
     "co-fs": "^1.2.0",
     "co-views": "^2.1.0",
     "ejs": "^2.5.5",
@@ -20,7 +20,7 @@
     "koa-basic-auth": "^1.1.1",
     "koa-compose": "^2.3.0",
     "koa-csrf": "^2.1.1",
-    "koa-logger": "^1.2.1",
+    "koa-logger": "^3.2.1",
     "koa-route": "^1.1.4",
     "koa-session": "^3.1.0",
     "koa-static": "^2.0.0",
